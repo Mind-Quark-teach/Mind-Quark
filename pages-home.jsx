@@ -389,6 +389,7 @@ const CoursesPreview = ({ lang, t, setPage, addToCart }) => {
     </div>
   </section>
 );
+};
 
 const CourseCard = ({ course, lang, t, setPage, addToCart, idx = 0 }) => (
   <div className="anim-fade-up" style={{
@@ -432,9 +433,8 @@ const CourseCard = ({ course, lang, t, setPage, addToCart, idx = 0 }) => (
         </div>
       </div>
     </div>
-  </section>
+  </div>
   );
-};
 
 // ---------- Webinar preview ----------
 const WebinarPreview = ({ lang, t, setPage }) => {
@@ -484,6 +484,7 @@ const WebinarPreview = ({ lang, t, setPage }) => {
     </div>
   </section>
 );
+};
 
 const WebinarMini = ({ w, lang, t, setPage, idx }) => {
   const [tu, setTu] = useState(timeUntil(w.date));
@@ -544,7 +545,6 @@ const WebinarMini = ({ w, lang, t, setPage, idx }) => {
         </div>
       </div>
     </div>
-  </section>
   );
 };
 
@@ -737,6 +737,7 @@ const About = ({ lang, t, setPage }) => {
     </div>
   </section>
 );
+};
 
 // ---------- Final CTA ----------
 const FinalCTA = ({ lang, t }) => {
