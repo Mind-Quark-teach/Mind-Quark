@@ -3,6 +3,7 @@
 // =====================================================
 
 const WebinarPage = ({ lang, t, setPage, page }) => {
+  const { isMobile } = useResponsive();
   const focusId = page.focus;
   const featured = WEBINARS.find(w => w.id === focusId) || WEBINARS[0];
   const [tu, setTu] = useState(timeUntil(featured.date));
@@ -22,7 +23,7 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
   };
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       {/* Featured next webinar */}
       <div className="card" style={{
         padding: 0, position: 'relative', overflow: 'hidden',
@@ -41,7 +42,7 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
         ]} />
         <div style={{ position: 'absolute', top: 28, right: 28, opacity: 0.6 }}><DotGrid /></div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 40, padding: '64px 56px', alignItems: 'center', position: 'relative' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.3fr 1fr', gap: isMobile ? 24 : 40, padding: isMobile ? '32px 20px' : '64px 56px', alignItems: 'center', position: 'relative' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 12px',
               borderRadius: 999, background: 'rgba(220,38,38,0.2)', border: '1px solid rgba(220,38,38,0.4)',
@@ -93,12 +94,12 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
               fontFamily: 'JetBrains Mono', fontSize: 12, color: 'rgba(255,255,255,0.5)',
               letterSpacing: '0.15em', marginBottom: 14, textAlign: 'center',
             }}>── {t.starts_in}</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 10 }}>
               {[
                 {v: tu.d, l: t.days},{v: tu.h, l: t.hours},{v: tu.m, l: t.minutes},{v: tu.s, l: t.seconds}
               ].map((x,i) => (
                 <div key={i} style={{
-                  background: 'rgba(255,255,255,0.08)', borderRadius: 18, padding: '24px 14px', textAlign: 'center',
+                  background: 'rgba(255,255,255,0.08)', borderRadius: isMobile ? 14 : 18, padding: isMobile ? '16px 10px' : '24px 14px', textAlign: 'center',
                   border: '1px solid rgba(255,255,255,0.1)',
                 }}>
                   <div className="display" style={{ fontSize: 56, color: '#fff', lineHeight: 1, letterSpacing: '-0.04em' }}>
@@ -170,16 +171,17 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
 
             return (
               <div key={w.id} style={{
-                display: 'grid', gridTemplateColumns: '90px 1fr auto', gap: 24,
-                padding: 22, background: 'var(--bg)', borderRadius: 18, alignItems: 'center',
+                display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '90px 1fr auto', gap: isMobile ? 12 : 24,
+                padding: isMobile ? 16 : 22, background: 'var(--bg)', borderRadius: 18, alignItems: 'center',
               }}>
                 {/* Date block */}
-                <div style={{ textAlign: 'center', borderRight: '1px solid var(--line)', paddingRight: 24 }}>
-                  <div className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.1em' }}>{m}</div>
+                <div style={{ textAlign: isMobile ? 'left' : 'center', borderRight: isMobile ? 'none' : '1px solid var(--line)', paddingRight: isMobile ? 0 : 24, display: isMobile ? 'flex' : 'block', alignItems: 'center', gap: 8 }}>
+                  {isMobile && <div className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.1em', whiteSpace: 'nowrap' }}>{m} {d.getDate()}</div>}
+                  {!isMobile && <><div className="mono" style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.1em' }}>{m}</div>
                   <div className="display" style={{ fontSize: 40, lineHeight: 1, margin: '4px 0' }}>{d.getDate()}</div>
                   <div style={{ fontSize: 11, color: 'var(--muted)' }}>
                     {String(d.getHours()).padStart(2,'0')}:{String(d.getMinutes()).padStart(2,'0')}
-                  </div>
+                  </div></>}
                 </div>
 
                 {/* Info */}
@@ -210,8 +212,8 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
                 </div>
 
                 {/* Action */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
-                  <div className="display" style={{ fontSize: 24, color: 'var(--ink)' }}>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', alignItems: isMobile ? 'center' : 'flex-end', gap: 10, flexWrap: 'wrap' }}>
+                  <div className="display" style={{ fontSize: isMobile ? 18 : 24, color: 'var(--ink)' }}>
                     {w.price === 0 ? (lang==='it'?'GRATIS':'FREE') : `€${w.price}`}
                   </div>
                   {isFull ? (
@@ -236,7 +238,7 @@ const WebinarPage = ({ lang, t, setPage, page }) => {
 
       {/* Info card */}
       <div className="card" style={{ marginTop: 16, padding: 36 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 16 : 24 }}>
           {[
             { i: 'radio', t_it: 'Live e interattivo', t_en: 'Live & interactive', d_it: 'Webinar via Zoom. Microfono aperto, lavagna condivisa, domande in diretta.', d_en: 'Webinars via Zoom. Open mic, shared whiteboard, live Q&A.' },
             { i: 'download', t_it: 'Sempre scaricabile', t_en: 'Always downloadable', d_it: 'Ogni sessione è registrata in MP4 e disponibile nella tua area entro 24h.', d_en: 'Every session is recorded as MP4 and available in your area within 24h.' },

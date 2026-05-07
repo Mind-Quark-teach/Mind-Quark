@@ -4,6 +4,15 @@
 
 const { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext } = React;
 
+const useResponsive = () => {
+  const [w, setW] = useState(window.innerWidth);
+  useEffect(() => {
+    const o = () => setW(window.innerWidth);
+    return (window.addEventListener('resize', o), () => window.removeEventListener('resize', o));
+  }, []);
+  return { w, isMobile: w < 769, isTablet: w >= 769 && w < 1025, isDesktop: w >= 1025 };
+};
+
 // ---------- Icons (inline SVG, stroke-based) ----------
 const Icon = ({ name, size = 18, stroke = 'currentColor', strokeWidth = 1.8 }) => {
   const props = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round' };
@@ -99,92 +108,137 @@ const Logo = ({ size = 26, dark = false }) =>
 
 // ---------- Top Navigation ----------
 const Nav = ({ page, setPage, lang, setLang, cart, t }) => {
+  const { isMobile } = useResponsive();
+  const [menuOpen, setMenuOpen] = useState(false);
   const items = [
   { k: 'home', label: t.nav.home },
   { k: 'courses', label: t.nav.courses },
   { k: 'webinar', label: t.nav.webinar },
   { k: 'about', label: t.nav.about }];
 
-  return (
-    <nav style={{
+  useEffect(() => { setMenuOpen(false); }, [page]);
+
+  return (<>
+    <nav className="nav-padding" style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '20px 28px', gap: 24,
+      padding: '20px 28px', gap: isMobile ? 8 : 24,
       background: '#fff', borderRadius: 'var(--radius-xl)',
       boxShadow: 'var(--shadow-card)',
       position: 'sticky', top: 16, zIndex: 50,
-      maxWidth: 1320, margin: '16px auto 0'
+      maxWidth: 'var(--page-max)', margin: '16px auto 0'
     }}>
       <div style={{ cursor: 'pointer' }} onClick={() => setPage({ name: 'home' })}>
-        <Logo size={28} />
+        <Logo size={isMobile ? 22 : 28} />
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        {items.map((it) =>
-        <button key={it.k} onClick={() => setPage({ name: it.k })}
-        style={{
-          background: 'transparent', border: 'none', cursor: 'pointer',
-          padding: '10px 16px', borderRadius: 999,
-          fontFamily: 'Inter', fontWeight: 500, fontSize: 14,
-          color: page.name === it.k ? 'var(--accent)' : 'var(--ink-2)',
-          transition: 'color 0.2s, background 0.2s'
-        }}
-        onMouseOver={(e) => {if (page.name !== it.k) e.target.style.background = 'rgba(13,18,32,0.04)';}}
-        onMouseOut={(e) => {e.target.style.background = 'transparent';}}>
-          
-            {it.label}
-            {page.name === it.k &&
-          <span style={{ display: 'inline-block', width: 4, height: 4, borderRadius: 50, background: 'var(--accent)', marginLeft: 6, verticalAlign: 'middle' }} />
-          }
+      {isMobile ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg)', borderRadius: 999, padding: 2 }}>
+            {['it', 'en'].map((l) =>
+              <button key={l} onClick={() => setLang(l)} style={{
+                background: lang === l ? '#fff' : 'transparent', border: 'none', cursor: 'pointer',
+                padding: '4px 8px', borderRadius: 999, fontFamily: 'Inter', fontWeight: 600, fontSize: 10,
+                color: lang === l ? 'var(--ink)' : 'var(--muted)',
+                boxShadow: lang === l ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                textTransform: 'uppercase', letterSpacing: '0.05em'
+              }}>{l}</button>
+            )}
+          </div>
+          <button className="btn btn-dark" style={{ padding: '8px 12px', fontSize: 12 }} onClick={() => setPage({ name: 'dashboard' })}>
+            <Icon name="user" size={12} stroke="#fff" />
           </button>
-        )}
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        {/* Lang switch */}
-        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg)', borderRadius: 999, padding: 3 }}>
-          {['it', 'en'].map((l) =>
-          <button key={l} onClick={() => setLang(l)}
-          style={{
-            background: lang === l ? '#fff' : 'transparent', border: 'none', cursor: 'pointer',
-            padding: '6px 12px', borderRadius: 999,
-            fontFamily: 'Inter', fontWeight: 600, fontSize: 12,
-            color: lang === l ? 'var(--ink)' : 'var(--muted)',
-            boxShadow: lang === l ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
-            textTransform: 'uppercase', letterSpacing: '0.05em'
+          <button onClick={() => setMenuOpen(o => !o)} style={{
+            background: 'var(--bg)', border: 'none', cursor: 'pointer',
+            width: 36, height: 36, borderRadius: 999, display: 'grid', placeItems: 'center'
           }}>
-              {l}
+            <Icon name="menu" size={18} />
+          </button>
+        </div>
+      ) : <>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          {items.map((it) =>
+            <button key={it.k} onClick={() => setPage({ name: it.k })}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                padding: '10px 16px', borderRadius: 999,
+                fontFamily: 'Inter', fontWeight: 500, fontSize: 14,
+                color: page.name === it.k ? 'var(--accent)' : 'var(--ink-2)',
+                transition: 'color 0.2s, background 0.2s'
+              }}
+              onMouseOver={(e) => {if (page.name !== it.k) e.target.style.background = 'rgba(13,18,32,0.04)';}}
+              onMouseOut={(e) => {e.target.style.background = 'transparent';}}>
+              {it.label}
+              {page.name === it.k &&
+                <span style={{ display: 'inline-block', width: 4, height: 4, borderRadius: 50, background: 'var(--accent)', marginLeft: 6, verticalAlign: 'middle' }} />
+              }
             </button>
           )}
         </div>
-        {/* Cart */}
-        <button onClick={() => setPage({ name: 'checkout' })}
-        style={{
-          position: 'relative', background: 'var(--bg)', border: 'none', cursor: 'pointer',
-          width: 40, height: 40, borderRadius: 999, display: 'grid', placeItems: 'center'
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg)', borderRadius: 999, padding: 3 }}>
+            {['it', 'en'].map((l) =>
+              <button key={l} onClick={() => setLang(l)}
+                style={{
+                  background: lang === l ? '#fff' : 'transparent', border: 'none', cursor: 'pointer',
+                  padding: '6px 12px', borderRadius: 999,
+                  fontFamily: 'Inter', fontWeight: 600, fontSize: 12,
+                  color: lang === l ? 'var(--ink)' : 'var(--muted)',
+                  boxShadow: lang === l ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                  textTransform: 'uppercase', letterSpacing: '0.05em'
+                }}>
+                {l}
+              </button>
+            )}
+          </div>
+          <button onClick={() => setPage({ name: 'checkout' })}
+            style={{
+              position: 'relative', background: 'var(--bg)', border: 'none', cursor: 'pointer',
+              width: 40, height: 40, borderRadius: 999, display: 'grid', placeItems: 'center'
+            }}>
+            <Icon name="cart" size={18} />
+            {cart.length > 0 &&
+              <span style={{
+                position: 'absolute', top: -2, right: -2,
+                minWidth: 18, height: 18, borderRadius: 50, padding: '0 4px',
+                background: 'var(--accent)', color: '#fff',
+                fontSize: 10, fontWeight: 700, display: 'grid', placeItems: 'center'
+              }}>{cart.length}</span>
+            }
+          </button>
+          <button className="btn btn-dark" onClick={() => setPage({ name: 'dashboard' })}>
+            <Icon name="user" size={14} stroke="#fff" />
+            {t.nav.dashboard}
+          </button>
+        </div>
+      </>}
+    </nav>
+    {isMobile && menuOpen && (
+      <div style={{
+        maxWidth: 'var(--page-max)', margin: '8px auto 0', padding: '0 var(--page-pad)',
+      }}>
+        <div style={{
+          background: '#fff', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-card)',
+          padding: 16, display: 'flex', flexDirection: 'column', gap: 4,
         }}>
-          <Icon name="cart" size={18} />
-          {cart.length > 0 &&
-          <span style={{
-            position: 'absolute', top: -2, right: -2,
-            minWidth: 18, height: 18, borderRadius: 50, padding: '0 4px',
-            background: 'var(--accent)', color: '#fff',
-            fontSize: 10, fontWeight: 700, display: 'grid', placeItems: 'center'
-          }}>{cart.length}</span>
-          }
-        </button>
-        {/* Login / Dashboard */}
-        <button className="btn btn-dark" onClick={() => setPage({ name: 'dashboard' })}>
-          <Icon name="user" size={14} stroke="#fff" />
-          {t.nav.dashboard}
-        </button>
+          {items.map((it) =>
+            <button key={it.k} onClick={() => setPage({ name: it.k })} style={{
+              background: page.name === it.k ? 'var(--accent-soft)' : 'transparent',
+              border: 'none', cursor: 'pointer', padding: '14px 16px', borderRadius: 'var(--radius-md)',
+              fontFamily: 'Inter', fontWeight: 600, fontSize: 15, textAlign: 'left',
+              color: page.name === it.k ? 'var(--accent)' : 'var(--ink-2)',
+            }}>{it.label}</button>
+          )}
+        </div>
       </div>
-    </nav>);
-
+    )}
+  </>);
 };
 
 // ---------- Section header (kicker with sparkles like reference) ----------
-const SectionHeader = ({ title, subtitle, kicker, align = 'center' }) =>
-<div style={{ textAlign: align, marginBottom: 48, position: 'relative' }}>
+const SectionHeader = ({ title, subtitle, kicker, align = 'center' }) => {
+  const { isMobile } = useResponsive();
+  return (
+<div style={{ textAlign: align, marginBottom: isMobile ? 28 : 48, position: 'relative' }}>
     <div style={{
     display: 'inline-flex', alignItems: 'center', gap: 14,
     fontFamily: 'Archivo', fontWeight: 900, fontSize: 12, letterSpacing: '0.2em',
@@ -194,15 +248,16 @@ const SectionHeader = ({ title, subtitle, kicker, align = 'center' }) =>
       {kicker}
       <span style={{ width: 24, height: 1, background: 'var(--muted-2)' }} />
     </div>
-    <h2 className="display" style={{ fontSize: 64, margin: 0, lineHeight: 0.95, color: 'var(--ink)' }}>
+    <h2 className="display fs-section" style={{ fontSize: isMobile ? 36 : 64, margin: 0, lineHeight: 0.95, color: 'var(--ink)' }}>
       <span style={{ color: 'var(--accent)' }}>✦</span> {title} <span style={{ color: 'var(--accent)' }}>✦</span>
     </h2>
     {subtitle &&
-  <p style={{ fontSize: 16, color: 'var(--muted)', margin: '20px auto 0', maxWidth: 560, lineHeight: 1.5 }}>
+  <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--muted)', margin: '14px auto 0', maxWidth: 560, lineHeight: 1.5 }}>
         {subtitle}
       </p>
   }
-  </div>;
+  </div>);
+};
 
 
 // ---------- Course thumbnail (synthetic gradient + glyph mockup) ----------
@@ -257,13 +312,15 @@ const CourseThumb = ({ subjectId, height = 200, glyph, color }) => {
 };
 
 // ---------- Footer ----------
-const Footer = ({ lang, t, setPage }) =>
-<footer style={{ maxWidth: 1320, margin: '40px auto 24px', padding: '0 16px' }}>
-    <div className="card" style={{ padding: 56, position: 'relative', overflow: 'hidden' }}>
+const Footer = ({ lang, t, setPage }) => {
+  const { isMobile } = useResponsive();
+  return (
+<footer style={{ maxWidth: 'var(--page-max)', margin: '40px auto 24px', padding: '0 var(--page-pad)' }}>
+    <div className="card card-padding" style={{ padding: isMobile ? 32 : 56, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <Spheres count={4} seed={3} />
+        <Spheres count={isMobile ? 2 : 4} seed={3} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 40, position: 'relative' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.4fr 1fr 1fr 1fr', gap: isMobile ? 24 : 40, position: 'relative' }}>
         <div>
           <Logo size={30} />
           <p style={{ marginTop: 16, color: 'var(--muted)', fontSize: 14, lineHeight: 1.6, maxWidth: 280 }}>
@@ -305,9 +362,9 @@ const Footer = ({ lang, t, setPage }) =>
         </div>
       </div>
       <div style={{
-      marginTop: 48, paddingTop: 24, borderTop: '1px solid var(--line)',
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      fontSize: 12, color: 'var(--muted)'
+      marginTop: isMobile ? 32 : 48, paddingTop: 24, borderTop: '1px solid var(--line)',
+      display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center',
+      gap: 8, fontSize: 12, color: 'var(--muted)'
     }}>
         <div>© 2026 MindQuark.io · Francesco Coccimiglio · P.IVA 04829137009</div>
         <div style={{ display: 'flex', gap: 18 }}>
@@ -315,7 +372,8 @@ const Footer = ({ lang, t, setPage }) =>
         </div>
       </div>
     </div>
-  </footer>;
+  </footer>);
+};
 
 
 // ---------- Sparkle decoration ----------

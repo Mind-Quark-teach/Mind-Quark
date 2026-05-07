@@ -3,6 +3,7 @@
 // =====================================================
 
 const HomeHero = ({ lang, t, setPage }) => {
+  const { isMobile } = useResponsive();
   const next = WEBINARS[0];
   const [tu, setTu] = useState(timeUntil(next.date));
   useEffect(() => {
@@ -11,8 +12,8 @@ const HomeHero = ({ lang, t, setPage }) => {
   }, [next.date]);
 
   return (
-    <section style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
-      <div className="card" style={{ padding: '64px 56px 40px', position: 'relative', overflow: 'hidden', minHeight: 620 }}>
+    <section style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
+      <div className="card hero-padding" style={{ padding: '64px 56px 40px', position: 'relative', overflow: 'hidden', minHeight: isMobile ? 'auto' : 620 }}>
 
         {/* Geometric decoration — concentric arcs + grid + formulas */}
         <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
@@ -71,7 +72,7 @@ const HomeHero = ({ lang, t, setPage }) => {
           <DotGrid />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 40, alignItems: 'center', position: 'relative' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.15fr 1fr', gap: isMobile ? 24 : 40, alignItems: 'center', position: 'relative' }}>
 
           {/* LEFT */}
           <div className="anim-fade-up">
@@ -81,20 +82,20 @@ const HomeHero = ({ lang, t, setPage }) => {
             }}>
               {t.hero_kicker}
             </div>
-            <h1 className="display" style={{
-              fontSize: 108, lineHeight: 0.92, margin: 0, letterSpacing: '-0.04em',
+            <h1 className="display fs-hero" style={{
+              fontSize: isMobile ? 48 : 108, lineHeight: 0.92, margin: 0, letterSpacing: '-0.04em',
             }}>
               FRANCESCO<br/>
               <span style={{ color: 'var(--accent)' }}>COCCIMIGLIO</span><span style={{ color: 'var(--accent)' }}>.</span>
             </h1>
             <div style={{
-              marginTop: 18, fontFamily: 'JetBrains Mono', fontSize: 12,
+              marginTop: 18, fontFamily: 'JetBrains Mono', fontSize: isMobile ? 11 : 12,
               color: 'var(--muted)', letterSpacing: '0.05em',
             }}>
               ── {t.hero_role}
             </div>
             <p style={{
-              marginTop: 22, fontSize: 15, lineHeight: 1.6, color: 'var(--ink-2)',
+              marginTop: 22, fontSize: isMobile ? 14 : 15, lineHeight: 1.6, color: 'var(--ink-2)',
               maxWidth: 460,
             }}>
               {t.hero_sub}
@@ -113,7 +114,7 @@ const HomeHero = ({ lang, t, setPage }) => {
 
             {/* Stat row */}
             <div style={{
-              marginTop: 48, display: 'flex', gap: 36,
+              marginTop: 48, display: 'flex', gap: isMobile ? 20 : 36,
               paddingTop: 28, borderTop: '1px solid var(--line)',
             }}>
               {[
@@ -122,7 +123,7 @@ const HomeHero = ({ lang, t, setPage }) => {
                 { n: '4.9/5', l: lang==='it'?'Recensioni studenti':'Student reviews' },
               ].map(s => (
                 <div key={s.l}>
-                  <div className="display" style={{ fontSize: 32, lineHeight: 1 }}>{s.n}</div>
+                  <div className="display" style={{ fontSize: isMobile ? 24 : 32, lineHeight: 1 }}>{s.n}</div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, maxWidth: 110, lineHeight: 1.3 }}>{s.l}</div>
                 </div>
               ))}
@@ -130,7 +131,7 @@ const HomeHero = ({ lang, t, setPage }) => {
           </div>
 
           {/* RIGHT — portrait with geometric backdrop + side cards */}
-          <div style={{ position: 'relative', height: 600 }}>
+          {!isMobile && <div style={{ position: 'relative', height: 600 }}>
             {/* Geometric backdrop behind portrait */}
             <div style={{
               position: 'absolute', left: '50%', top: '50%',
@@ -275,14 +276,14 @@ const HomeHero = ({ lang, t, setPage }) => {
                 <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)' }}>1.2 GB · {lang==='it'?'pronto':'ready'}</div>
               </div>
             </div>
-          </div>
+          </div>}
         </div>
 
         {/* Bottom marquee — subjects */}
         <div style={{
-          marginTop: 48, paddingTop: 24, borderTop: '1px solid var(--line)',
-          display: 'flex', alignItems: 'center', gap: 40,
-          overflow: 'hidden',
+          marginTop: isMobile ? 24 : 48, paddingTop: 24, borderTop: '1px solid var(--line)',
+          display: 'flex', alignItems: 'center', gap: isMobile ? 16 : 40,
+          overflowX: 'auto', flexWrap: isMobile ? 'nowrap' : 'nowrap',
         }}>
           <span style={{ fontSize: 11, fontFamily: 'Archivo', fontWeight: 700, letterSpacing: '0.2em', color: 'var(--muted)', whiteSpace: 'nowrap' }}>
             {lang==='it'?'CHE COSA INSEGNO':'WHAT I TEACH'}
@@ -302,11 +303,13 @@ const HomeHero = ({ lang, t, setPage }) => {
 };
 
 // ---------- Subjects grid ----------
-const SubjectsGrid = ({ lang, t, setPage }) => (
-  <section style={{ maxWidth: 1320, margin: '64px auto 0', padding: '0 16px' }}>
-    <div className="card" style={{ padding: '72px 56px', position: 'relative', overflow: 'hidden' }}>
+const SubjectsGrid = ({ lang, t, setPage }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: '40px auto 0', padding: '0 var(--page-pad)' }}>
+    <div className="card card-padding" style={{ padding: isMobile ? '40px 20px' : '72px 56px', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <Spheres count={3} seed={2} />
+        <Spheres count={isMobile ? 2 : 3} seed={2} />
       </div>
       <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
       <div style={{ position: 'relative' }}>
@@ -315,7 +318,7 @@ const SubjectsGrid = ({ lang, t, setPage }) => (
           title={t.section_subjects}
           subtitle={t.section_subjects_sub}
         />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 10 : 16 }}>
           {SUBJECTS.map((s, i) => (
             <div key={s.id} className="anim-fade-up" style={{
               animationDelay: `${i*0.04}s`,
@@ -347,25 +350,28 @@ const SubjectsGrid = ({ lang, t, setPage }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // ---------- Courses preview ----------
-const CoursesPreview = ({ lang, t, setPage, addToCart }) => (
-  <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }}>
-    <div className="card" style={{ padding: '72px 56px', position: 'relative' }}>
+const CoursesPreview = ({ lang, t, setPage, addToCart }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }}>
+    <div className="card card-padding" style={{ padding: isMobile ? '40px 20px' : '72px 56px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-        marginBottom: 40, flexWrap: 'wrap', gap: 16,
+        marginBottom: isMobile ? 24 : 40, flexWrap: 'wrap', gap: 16,
       }}>
         <div>
           <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 8 }}>
             ── 02 / {t.section_courses}
           </div>
-          <h2 className="display" style={{ fontSize: 56, margin: 0, lineHeight: 0.95 }}>
+          <h2 className="display fs-section" style={{ fontSize: isMobile ? 36 : 56, margin: 0, lineHeight: 0.95 }}>
             {t.section_courses}<span style={{ color: 'var(--accent)' }}>.</span>
           </h2>
-          <p style={{ marginTop: 12, color: 'var(--muted)', maxWidth: 480, fontSize: 15 }}>
+          <p style={{ marginTop: 12, color: 'var(--muted)', maxWidth: 480, fontSize: isMobile ? 14 : 15 }}>
             {t.section_courses_sub}
           </p>
         </div>
@@ -375,7 +381,7 @@ const CoursesPreview = ({ lang, t, setPage, addToCart }) => (
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+      <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 12 : 20 }}>
         {COURSES.slice(0, 6).map((c, i) => (
           <CourseCard key={c.id} course={c} lang={lang} t={t} setPage={setPage} addToCart={addToCart} idx={i} />
         ))}
@@ -426,14 +432,17 @@ const CourseCard = ({ course, lang, t, setPage, addToCart, idx = 0 }) => (
         </div>
       </div>
     </div>
-  </div>
-);
+  </section>
+  );
+};
 
 // ---------- Webinar preview ----------
-const WebinarPreview = ({ lang, t, setPage }) => (
-  <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }}>
-    <div className="card" style={{
-      padding: '72px 56px', position: 'relative', overflow: 'hidden',
+const WebinarPreview = ({ lang, t, setPage }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }}>
+    <div className="card card-padding" style={{
+      padding: isMobile ? '40px 20px' : '72px 56px', position: 'relative', overflow: 'hidden',
       background: 'linear-gradient(180deg, #0d1220 0%, #1a2238 100%)',
       color: '#fff',
     }}>
@@ -448,15 +457,15 @@ const WebinarPreview = ({ lang, t, setPage }) => (
         { s: 'iℏ∂ψ/∂t', top: '78%', left: '78%', size: 28 },
       ]} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, position: 'relative', flexWrap: 'wrap', gap: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: isMobile ? 24 : 40, position: 'relative', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', marginBottom: 8 }}>
             ── 03 / {t.section_webinar}
           </div>
-          <h2 className="display" style={{ fontSize: 56, margin: 0, lineHeight: 0.95, color: '#fff' }}>
+          <h2 className="display" style={{ fontSize: isMobile ? 36 : 56, margin: 0, lineHeight: 0.95, color: '#fff' }}>
             {t.section_webinar}<span style={{ color: '#60A5FA' }}>.</span>
           </h2>
-          <p style={{ marginTop: 12, color: 'rgba(255,255,255,0.65)', maxWidth: 480, fontSize: 15 }}>
+          <p style={{ marginTop: 12, color: 'rgba(255,255,255,0.65)', maxWidth: 480, fontSize: isMobile ? 14 : 15 }}>
             {t.section_webinar_sub}
           </p>
         </div>
@@ -467,7 +476,7 @@ const WebinarPreview = ({ lang, t, setPage }) => (
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, position: 'relative' }}>
+      <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 12 : 16, position: 'relative' }}>
         {WEBINARS.slice(0,3).map((w, i) => (
           <WebinarMini key={w.id} w={w} lang={lang} t={t} setPage={setPage} idx={i} />
         ))}
@@ -535,11 +544,13 @@ const WebinarMini = ({ w, lang, t, setPage, idx }) => {
         </div>
       </div>
     </div>
+  </section>
   );
 };
 
 // ---------- How it works ----------
 const HowItWorks = ({ lang, t }) => {
+  const { isMobile } = useResponsive();
   const steps = [
     {
       n: '01', glyph: '∫',
@@ -564,15 +575,15 @@ const HowItWorks = ({ lang, t }) => {
     },
   ];
   return (
-    <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }}>
-      <div className="card" style={{ padding: '72px 56px', position: 'relative' }}>
+    <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }}>
+      <div className="card card-padding" style={{ padding: isMobile ? '40px 20px' : '72px 56px', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
         <SectionHeader
           kicker={lang==='it'?'IL METODO':'THE METHOD'}
           title={t.section_how}
           subtitle={t.section_how_sub}
         />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 12 : 16 }}>
           {steps.map((s, i) => (
             <div key={s.n} style={{
               background: 'var(--bg)', borderRadius: 'var(--radius-lg)', padding: 36,
@@ -607,16 +618,18 @@ const HowItWorks = ({ lang, t }) => {
 };
 
 // ---------- Testimonials ----------
-const Testimonials = ({ lang, t }) => (
-  <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }}>
-    <div className="card" style={{ padding: '72px 56px', position: 'relative' }}>
+const Testimonials = ({ lang, t }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }}>
+    <div className="card card-padding" style={{ padding: isMobile ? '40px 20px' : '72px 56px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
       <SectionHeader
         kicker={lang==='it'?'STUDENTI':'STUDENTS'}
         title={t.section_testimonials}
         subtitle={t.section_testimonials_sub}
       />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+      <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: isMobile ? 12 : 16 }}>
         {TESTIMONIALS.map((tt, i) => (
           <div key={i} style={{
             background: i%2===0 ? 'var(--bg)' : 'var(--ink)',
@@ -647,13 +660,16 @@ const Testimonials = ({ lang, t }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // ---------- About ----------
-const About = ({ lang, t, setPage }) => (
-  <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }} id="about">
+const About = ({ lang, t, setPage }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }} id="about">
     <div className="card" style={{ padding: '0', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: 540 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', minHeight: isMobile ? 'auto' : 540 }}>
         <div style={{ position: 'relative', overflow: 'hidden', background: '#e6e9ef' }}>
           <img src="assets/francesco-ambient.png" alt="Francesco"
             style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -670,12 +686,12 @@ const About = ({ lang, t, setPage }) => (
             </div>
           </div>
         </div>
-        <div style={{ padding: '64px 56px', position: 'relative' }}>
+        <div style={{ padding: isMobile ? '32px 20px' : '64px 56px', position: 'relative' }}>
           <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
           <div className="mono" style={{ fontSize: 12, letterSpacing: '0.15em', color: 'var(--muted)', marginBottom: 14 }}>
             ── 06 / {t.section_about}
           </div>
-          <h2 className="display" style={{ fontSize: 56, margin: 0, lineHeight: 0.95 }}>
+          <h2 className="display" style={{ fontSize: isMobile ? 36 : 56, margin: 0, lineHeight: 0.95 }}>
             {t.section_about}<span style={{ color: 'var(--accent)' }}>.</span>
           </h2>
           <p style={{ marginTop: 24, fontSize: 15, lineHeight: 1.7, color: 'var(--ink-2)' }}>
@@ -723,10 +739,12 @@ const About = ({ lang, t, setPage }) => (
 );
 
 // ---------- Final CTA ----------
-const FinalCTA = ({ lang, t }) => (
-  <section style={{ maxWidth: 1320, margin: '32px auto 0', padding: '0 16px' }}>
+const FinalCTA = ({ lang, t }) => {
+  const { isMobile } = useResponsive();
+  return (
+  <section style={{ maxWidth: 'var(--page-max)', margin: isMobile ? '16px auto 0' : '32px auto 0', padding: '0 var(--page-pad)' }}>
     <div className="card" style={{
-      padding: '80px 56px', position: 'relative', overflow: 'hidden',
+      padding: isMobile ? '48px 20px' : '80px 56px', position: 'relative', overflow: 'hidden',
       background: 'linear-gradient(135deg, #2563EB 0%, #1d4ed8 60%, #1e40af 100%)',
       color: '#fff', textAlign: 'center',
     }}>
@@ -743,7 +761,7 @@ const FinalCTA = ({ lang, t }) => (
         <div className="mono" style={{ fontSize: 12, letterSpacing: '0.2em', opacity: 0.7, marginBottom: 18 }}>
           ── {lang==='it'?'INIZIA OGGI':'START TODAY'}
         </div>
-        <h2 className="display" style={{ fontSize: 96, margin: 0, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
+        <h2 className="display fs-cta" style={{ fontSize: isMobile ? 48 : 96, margin: 0, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
           {t.section_cta}
         </h2>
         <p style={{ marginTop: 20, fontSize: 17, opacity: 0.85, maxWidth: 540, margin: '20px auto 0' }}>
@@ -761,7 +779,8 @@ const FinalCTA = ({ lang, t }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // ---------- Home page composer ----------
 const HomePage = (props) => (

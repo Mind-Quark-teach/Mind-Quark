@@ -3,6 +3,7 @@
 // =====================================================
 
 const DashboardPage = ({ lang, t, setPage, enrolled }) => {
+  const { isMobile } = useResponsive();
   const myCourses = enrolled.length > 0
     ? enrolled.map(id => COURSES.find(c => c.id === id)).filter(Boolean)
     : [COURSES[0], COURSES[2], COURSES[5]]; // demo data
@@ -10,9 +11,9 @@ const DashboardPage = ({ lang, t, setPage, enrolled }) => {
   const [tab, setTab] = useState('courses');
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       {/* Header */}
-      <div className="card" style={{ padding: '40px 48px', position: 'relative', overflow: 'hidden' }}>
+      <div className="card" style={{ padding: isMobile ? '28px 20px' : '40px 48px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <Spheres count={3} seed={4} />
         </div>
@@ -28,7 +29,7 @@ const DashboardPage = ({ lang, t, setPage, enrolled }) => {
             <div className="mono" style={{ fontSize: 11, letterSpacing: '0.15em', color: 'var(--muted)', marginBottom: 6 }}>
               ── {lang==='it'?'BENTORNATO':'WELCOME BACK'}
             </div>
-            <h1 className="display" style={{ fontSize: 48, margin: 0, lineHeight: 1 }}>
+            <h1 className="display" style={{ fontSize: isMobile ? 32 : 48, margin: 0, lineHeight: 1 }}>
               {lang==='it'?'Ciao, Mario':'Hello, Mario'}<span style={{ color: 'var(--accent)' }}>.</span>
             </h1>
             <div style={{ marginTop: 8, fontSize: 14, color: 'var(--muted)' }}>
@@ -42,7 +43,7 @@ const DashboardPage = ({ lang, t, setPage, enrolled }) => {
         </div>
 
         {/* Stats */}
-        <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        <div className="grid-2" style={{ marginTop: isMobile ? 20 : 32, display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 10 }}>
           {[
             { l: t.my_courses, v: myCourses.length, sub: lang==='it'?'iscritti':'enrolled' },
             { l: lang==='it'?'Ore studiate':'Hours studied', v: '47h', sub: lang==='it'?'questo mese':'this month' },
@@ -133,7 +134,7 @@ const DashboardPage = ({ lang, t, setPage, enrolled }) => {
       {tab === 'webinars' && (
         <div className="card" style={{ marginTop: 16, padding: 36 }}>
           <h2 className="display" style={{ fontSize: 32, margin: '0 0 20px' }}>{lang==='it'?'I miei webinar':'My webinars'}</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: isMobile ? 10 : 12 }}>
             {myWebinars.map((w, i) => {
               const subj = SUBJECTS.find(s => s.id === w.subject);
               const isPast = i === 2;
@@ -224,7 +225,7 @@ const DashboardPage = ({ lang, t, setPage, enrolled }) => {
       {tab === 'materials' && (
         <div className="card" style={{ marginTop: 16, padding: 36 }}>
           <h2 className="display" style={{ fontSize: 32, margin: '0 0 20px' }}>{t.materials}</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 10 : 12 }}>
             {[
               {n:'Dispense Analisi 1', t:'PDF', size:'12 MB'},
               {n:'Esercizi svolti — Limiti', t:'PDF', size:'4 MB'},

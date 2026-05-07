@@ -3,6 +3,7 @@
 // =====================================================
 
 const PlayerPage = ({ lang, t, setPage, page }) => {
+  const { isMobile } = useResponsive();
   const course = COURSES.find(c => c.id === page.id) || COURSES[0];
   const subj = SUBJECTS.find(s => s.id === course.subject);
   const [playing, setPlaying] = useState(true);
@@ -21,14 +22,14 @@ const PlayerPage = ({ lang, t, setPage, page }) => {
   const current = PLAYER_LESSONS.find(l => l.current) || PLAYER_LESSONS[2];
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       <button onClick={() => setPage({ name: 'dashboard' })}
         style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--muted)',
           fontSize: 13, padding: '8px 0', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
         <Icon name="arrow_left" size={14} /> {lang==='it'?'Torna all\'area studente':'Back to student area'}
       </button>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px', gap: 16 }}>
         {/* LEFT — video + info */}
         <div>
           <div className="card" style={{ padding: 0, overflow: 'hidden', background: '#0d1220' }}>

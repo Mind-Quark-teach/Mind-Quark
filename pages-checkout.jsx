@@ -3,6 +3,7 @@
 // =====================================================
 
 const CheckoutPage = ({ lang, t, setPage, cart, removeFromCart, clearCart, setEnrolled }) => {
+  const { isMobile } = useResponsive();
   const [step, setStep] = useState('cart'); // cart | pay | done
   const [form, setForm] = useState({ name: '', email: '', card: '', exp: '', cvc: '' });
   const items = cart.map(id => COURSES.find(c => c.id === id)).filter(Boolean);
@@ -13,8 +14,8 @@ const CheckoutPage = ({ lang, t, setPage, cart, removeFromCart, clearCart, setEn
 
   if (items.length === 0 && step === 'cart') {
     return (
-      <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
-        <div className="card" style={{ padding: '120px 56px', textAlign: 'center', position: 'relative' }}>
+      <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
+        <div className="card" style={{ padding: isMobile ? '60px 20px' : '120px 56px', textAlign: 'center', position: 'relative' }}>
           <div style={{ fontSize: 72, opacity: 0.2, marginBottom: 20 }}>🛒</div>
           <h2 className="display" style={{ fontSize: 48, margin: 0 }}>
             {lang==='it'?'Carrello vuoto':'Empty cart'}
@@ -31,9 +32,9 @@ const CheckoutPage = ({ lang, t, setPage, cart, removeFromCart, clearCart, setEn
   }
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1100, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: isMobile ? '100%' : 1100, margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       {/* Progress */}
-      <div className="card" style={{ padding: 22, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 24, justifyContent: 'center' }}>
+      <div className="card" style={{ padding: isMobile ? 16 : 22, marginBottom: 16, display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 24, justifyContent: 'center', flexWrap: 'wrap' }}>
         {[
           { k: 'cart', l: lang==='it'?'Carrello':'Cart' },
           { k: 'pay', l: t.payment },
@@ -59,7 +60,7 @@ const CheckoutPage = ({ lang, t, setPage, cart, removeFromCart, clearCart, setEn
       </div>
 
       {step === 'cart' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.6fr 1fr', gap: 16 }}>
           <div className="card" style={{ padding: 32 }}>
             <h2 className="display" style={{ fontSize: 32, margin: '0 0 20px' }}>
               {lang==='it'?'Il tuo carrello':'Your cart'} <span style={{ color: 'var(--muted)', fontSize: 16, fontWeight: 400 }}>· {items.length}</span>

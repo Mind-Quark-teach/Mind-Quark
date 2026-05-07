@@ -3,6 +3,7 @@
 // =====================================================
 
 const CoursesPage = ({ lang, t, setPage, addToCart, cart, page }) => {
+  const { isMobile } = useResponsive();
   const [filter, setFilter] = useState(page.subject || 'all');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('popular');
@@ -18,9 +19,9 @@ const CoursesPage = ({ lang, t, setPage, addToCart, cart, page }) => {
   }, [filter, search, sort, lang]);
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       {/* Hero strip */}
-      <div className="card" style={{ padding: '56px 56px', position: 'relative', overflow: 'hidden' }}>
+      <div className="card card-padding" style={{ padding: isMobile ? '40px 20px' : '56px 56px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <Spheres count={4} seed={5} />
           <MathDeco items={[
@@ -29,12 +30,12 @@ const CoursesPage = ({ lang, t, setPage, addToCart, cart, page }) => {
           ]} />
         </div>
         <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="mono" style={{ fontSize: 12, letterSpacing: '0.15em', color: 'var(--muted)', marginBottom: 10 }}>
               ── {t.nav.courses.toUpperCase()}
             </div>
-            <h1 className="display" style={{ fontSize: 96, margin: 0, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
+            <h1 className="display" style={{ fontSize: isMobile ? 48 : 96, margin: 0, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
               {lang==='it' ? 'CATALOGO' : 'CATALOG'}<span style={{ color: 'var(--accent)' }}>.</span>
             </h1>
             <p style={{ marginTop: 16, fontSize: 16, color: 'var(--muted)', maxWidth: 520 }}>
@@ -46,7 +47,7 @@ const CoursesPage = ({ lang, t, setPage, addToCart, cart, page }) => {
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{
               background: 'var(--bg)', borderRadius: 999, padding: '10px 18px',
-              display: 'flex', alignItems: 'center', gap: 10, minWidth: 280,
+              display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 160 : 280,
             }}>
               <Icon name="search" size={16} stroke="var(--muted)" />
               <input value={search} onChange={e => setSearch(e.target.value)}
@@ -88,7 +89,7 @@ const CoursesPage = ({ lang, t, setPage, addToCart, cart, page }) => {
             {lang==='it'?'Nessun corso trovato':'No courses found'}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 12 : 20 }}>
             {filtered.map((c, i) => (
               <CourseCard key={c.id} course={c} lang={lang} t={t} setPage={setPage} addToCart={addToCart} idx={i} />
             ))}
@@ -120,6 +121,7 @@ const FilterChip = ({ active, onClick, label, count, color, glyph }) => (
 
 // ---------- Course detail ----------
 const CourseDetailPage = ({ lang, t, setPage, addToCart, cart, page }) => {
+  const { isMobile } = useResponsive();
   const course = COURSES.find(c => c.id === page.id) || COURSES[0];
   const subj = SUBJECTS.find(s => s.id === course.subject);
   const inCart = cart.includes(course.id);
@@ -127,7 +129,7 @@ const CourseDetailPage = ({ lang, t, setPage, addToCart, cart, page }) => {
   const syllabus = course.syllabus_it || COURSES[0].syllabus_it;
 
   return (
-    <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
+    <div className="page-enter" style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
       {/* Back */}
       <button onClick={() => setPage({ name: 'courses' })}
         style={{ background: 'transparent', border: 'none', cursor: 'pointer',
@@ -135,9 +137,9 @@ const CourseDetailPage = ({ lang, t, setPage, addToCart, cart, page }) => {
         <Icon name="arrow_left" size={14} /> {lang==='it'?'Torna al catalogo':'Back to catalog'}
       </button>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.6fr 1fr', gap: 16 }}>
         {/* LEFT */}
-        <div className="card" style={{ padding: '48px', position: 'relative', overflow: 'hidden' }}>
+        <div className="card" style={{ padding: isMobile ? '28px' : '48px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 28, right: 28 }}><DotGrid /></div>
 
           <div className="mono" style={{ fontSize: 12, letterSpacing: '0.15em', color: subj.color, marginBottom: 14 }}>
