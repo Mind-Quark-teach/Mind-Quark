@@ -423,5 +423,5 @@ const Stars = ({ value, size = 14 }) =>
 
 Object.assign(window, {
   Icon, Spheres, MathDeco, Logo, Nav, SectionHeader, CourseThumb, Footer,
-  Sparkle, DotGrid, Toast, Stars
+  Sparkle, DotGrid, Toast, Stars, useResponsive
 });
