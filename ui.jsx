@@ -114,7 +114,8 @@ const Nav = ({ page, setPage, lang, setLang, cart, t }) => {
   { k: 'home', label: t.nav.home },
   { k: 'courses', label: t.nav.courses },
   { k: 'webinar', label: t.nav.webinar },
-  { k: 'about', label: t.nav.about }];
+  { k: 'about', label: t.nav.about },
+  { k: 'onboarding', label: t.onboarding_nav }];
 
   useEffect(() => { setMenuOpen(false); }, [page]);
 

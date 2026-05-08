@@ -93,6 +93,7 @@ const App = () => {
       {page.name === 'dashboard' && <DashboardPage {...pageProps} />}
       {page.name === 'player' && <PlayerPage {...pageProps} />}
       {page.name === 'webinar' && <WebinarPage {...pageProps} />}
+      {page.name === 'onboarding' && <OnboardingPage {...pageProps} />}
       {page.name === 'about' && (
         <div className="page-enter" style={{ maxWidth: 1320, margin: '24px auto 0', padding: '0 16px' }}>
           <About {...pageProps} />

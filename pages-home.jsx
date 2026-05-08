@@ -13,7 +13,7 @@ const HomeHero = ({ lang, t, setPage }) => {
 
   return (
     <section style={{ maxWidth: 'var(--page-max)', margin: '24px auto 0', padding: '0 var(--page-pad)' }}>
-      <div className="card hero-padding" style={{ padding: '64px 56px 40px', position: 'relative', overflow: 'hidden', minHeight: isMobile ? 'auto' : 620 }}>
+      <div className="card hero-padding" style={{ padding: '56px 56px 36px', position: 'relative', overflow: 'hidden', minHeight: isMobile ? 'auto' : 580 }}>
 
         {/* Geometric decoration — concentric arcs + grid + formulas */}
         <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
@@ -131,7 +131,7 @@ const HomeHero = ({ lang, t, setPage }) => {
           </div>
 
           {/* RIGHT — portrait with geometric backdrop + side cards */}
-          {!isMobile && <div style={{ position: 'relative', height: 600 }}>
+          {!isMobile && <div style={{ position: 'relative', height: 520 }}>
             {/* Geometric backdrop behind portrait */}
             <div style={{
               position: 'absolute', left: '50%', top: '50%',
@@ -154,10 +154,10 @@ const HomeHero = ({ lang, t, setPage }) => {
 
             {/* Portrait — arch shape, no overlap with cards */}
             <div style={{
-              position: 'absolute', left: '50%', top: 0,
+              position: 'absolute', left: '50%', top: 40,
               transform: 'translateX(-50%)',
-              width: 340, height: 560,
-              borderRadius: '170px 170px 24px 24px',
+              width: 320, height: 480,
+              borderRadius: '160px 160px 24px 24px',
               background: 'linear-gradient(180deg, #eef1f5 0%, #dde2ea 100%)',
               overflow: 'hidden',
               boxShadow: 'inset 0 -40px 80px rgba(13,18,32,0.06), 0 20px 60px rgba(13,18,32,0.08)',
@@ -167,7 +167,7 @@ const HomeHero = ({ lang, t, setPage }) => {
               {/* arch frame line */}
               <div style={{
                 position: 'absolute', inset: 8,
-                borderRadius: '162px 162px 18px 18px',
+                borderRadius: '152px 152px 18px 18px',
                 border: '1px solid rgba(255,255,255,0.5)',
                 pointerEvents: 'none',
               }} />
